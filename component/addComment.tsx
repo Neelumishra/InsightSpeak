@@ -3,6 +3,16 @@ import axios from "axios";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useProModal } from "@/hooks/user-modal";
+
+import { Button } from "@/components/ui/button";
+import {
+  CardTitle,
+  CardHeader,
+  CardContent,
+  CardFooter,
+  Card,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 export default  function Add({ postId }:any) {
   console.log("here is my postId passed one",postId);
   const { name } = useProModal();
@@ -20,13 +30,28 @@ export default  function Add({ postId }:any) {
       console.log(e);
     } finally {
       router.refresh();
+      setValue("")
     }
     //post call the api to submit input data
   }
   return (
-    <div style={{display:"flex" ,gap:"1rem"}}>
-      <input type="text" onChange={(e) => setValue(e.target.value)} placeholder="Enter Your Comment"/>
-      <button style={{width:"50%",padding:"6px",backgroundColor:"crimson",color:"white",border:"none",borderRadius:"5px"}} onClick={handleSubmit}>Add</button>
-    </div>
+    <>
+      <CardFooter className="pt-4">
+        <div className="flex">
+          <Input
+           value={comment}
+            onChange={(e) => setValue(e.target.value)}
+            className="flex-1"
+            placeholder="Enter Your Comment"
+          />
+          <Button
+            onClick={handleSubmit}
+            className="ml-2 bg-red-500 hover:bg-red-700 text-white"
+          >
+            Add
+          </Button>
+        </div>
+      </CardFooter>
+    </>
   );
 }

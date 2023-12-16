@@ -1,64 +1,68 @@
-import { getFeed, getComment } from "@/lib/fetch-feed";
+import { getComment, getFilter } from "@/lib/fetch-feed";
 import Add from "./addComment";
-export default async function FeedComponent() {
- 
-  const finalPost = await getFeed();
-  const comment = await getComment()
-  console.log(finalPost)
-  // function handleComment(){
-     
-  // }
-  console.log("This is CoomsentPost",comment);
-  console.log("THisis post",finalPost)
-  return (
-    <div style={{ padding: "10px" }}>
-      {comment.map((e: any) => (
-        <div
-          style={{
-            border: "1px solid black",
-            padding: "10px",
-            width: "20%",
-            borderRadius: "10px",
-            marginBottom: "20px",
-            backgroundColor: "#f9f9f9",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              border: "1px solid",
-              backgroundColor:"white",
-              borderRadius: "5px",
-              justifyContent: "center",
-            }}
-          >
-            <h4> {e.name}</h4>
-            <p>--{e.post}</p>
-          </div>
+import { Button } from "@/components/ui/button";
+import {
+  CardTitle,
+  CardHeader,
+  CardContent,
+  CardFooter,
+  Card,
+} from "@/components/ui/card";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+// import {usefilter} from "@/hooks/user-modal"
 
-          <div
-            style={{
-              borderRadius: "10px",
-            }}
-          >
-            {e.comments.map((e: any) => (
-              <p
-                style={{
-                  border: "1px solid",
-                  padding: "3px",
-                  borderRadius: "5px",
-                  backgroundColor: "white",
-                
-                }}
-              >
-                {e.comment}
-              </p>
-            ))}
-            <Add postId={e.id} />
-          </div>
-        </div>
+export default async function FeedComponent() {
+  //comment = if their is any filterdata so await getfilter()  or await getcomment()
+  //  const nameFilter = usefilter();
+  let comment = [];
+  let nameFilter =null;
+  if (nameFilter) {
+    comment = await getFilter(nameFilter);
+  } else {
+    comment = await getComment();
+  }
+  return (
+    <div className="space-y-4">
+      {comment.map((e: any) => (
+        <Card className="w-full">
+          <CardHeader className="flex flex-row ">
+            <Avatar style={{ marginRight: "10px" }}>
+              <AvatarFallback>{e.name.charAt(0).toUpperCase()}</AvatarFallback>
+            </Avatar>
+            <CardTitle>{e.post}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {e.comments.map((e: any) => (
+                <div className="flex items-center justify-between border border-gray-200 p-2 m-2 rounded">
+                  <p className="text-sm">{e.comment}</p>
+                  <DotIcon className="h-5 w-5 text-gray-500" />
+                </div>
+              ))}
+            </div>
+          </CardContent>
+          <Add postId={e.id} />
+        </Card>
       ))}
     </div>
+  );
+}
+
+function DotIcon(props: any) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="12.1" cy="12.1" r="1" />
+    </svg>
   );
 }
