@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE")
+  relationMode = "prisma"
+}
+
+// Define the Post model
+// Define the Post model
+model Post {
+  id        String       @id @default(cuid()) @map("_id")
+  post   String
+  name    String
+  createdAt DateTime @default(now())
+
+  // Define the relation between Post and Comment
+  comments  Comment[]
+  
+  // Bind the id field to MongoDB's _id
+}
+
+// Define the Comment model
+model Comment {
+  id        String      @id @default(cuid())  @map("_id")
+  comment      String
+  name    String
+  createdAt DateTime @default(now())
+
+  // Define the relation between Comment and Post
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    String
+
+  // Bind the id field to MongoDB's _id
+ 
+}
+
+
